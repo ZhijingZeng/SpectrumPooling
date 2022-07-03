@@ -218,7 +218,8 @@ plt.title('Variance Only Total Latency')
 plt.show()
 
 
-# +
+# -
+
 class Cournot_Model:
     def __init__(self,model =None,C1=1,C2=1,v=0.5,range=None):
         self.model = model
@@ -262,9 +263,7 @@ class Cournot_Model:
         pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta=self.generalSolve()
         totalProfit05 = totalProfit.subs([(C1, 1), (C2, 1), (alpha, 0.5),(beta,0)])
         totalProfit075 = totalProfit.subs([(C1, 1), (C2, 1), (alpha, 0.75),(beta,0)])
-        diProfit05 = diff(totalProfit05,v)
-        diProfit075 = diff(totalProfit075,v)
-        return self.plot(diProfit05,v),self.plot(diProfit075,v)
+        return self.plot(totalProfit05,v),self.plot(totalProfit075,v)
         
     def generalSolve(self):
         a,b,c,x,y,z,q,beta,C1,C2,v ,alpha = symbols('a b c,x,y,z,q,beta,C1,C2,v,alpha')
@@ -307,16 +306,10 @@ class Cournot_Model:
         for i in k:    
             fig.append(exp.subs(Arg,i))
         return fig
-
-
-# -
-
-
-
-
 Cour=Cournot_Model(model='VarianceOnly')
 pd,profit,latency,cs=Cour.testResults()
 k=Cour.range
+'''
 plt.plot(k,pd)
 plt.show()
 plt.plot(k,profit)
@@ -325,98 +318,41 @@ plt.plot(k,latency)
 plt.show()
 plt.plot(k,cs)
 plt.show()
-
-# +
-
+'''
 
 figDiprofit,figDiSp1Latency=Cour.varianceOnlyDerivativeAlpha()
-figDiProfit05,figDiProfit075=Cour.varianceOnlyDerivativeV()
-k = np.arange(0.01, 2.0, 0.05)
-
-# -
+figProfit05,figProfit075=Cour.varianceOnlyDerivativeV()
 
 # Derivative of Profit vs $\alpha$
 
 plt.plot(k,figDiprofit,'m')
-plt.title(r'Variance Only Derivative of Profit vs $\alpha$')
-plt.savefig('Variance Only Derivative of Profit vs alpha.pdf')
+plt.title(r'Variance Only Derivative of Total Profit vs $\alpha$')
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('derivative of profit')
+#plt.savefig('Variance Only Derivative of Total Profit vs alpha.pdf')
 
 
 # Derivative of SP 1 Latency vs $\alpha$
 
 plt.plot(k,figDiSp1Latency,'m')
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('Derivative of SP 1 Latency')
 plt.title(r'Variance Only Derivative of SP 1 Latency vs $\alpha$')
+fig = plt.gcf(); fig.tight_layout()
 plt.savefig('Variance Only Derivative of SP 1 Latency vs alpha.pdf')
 
 # Profit vs Variance at $\alpha = 0.5$
 
-plt.plot(k,figDiProfit05,'m')
-plt.title(r'Profit vs Variance at $\alpha = 0.5$')
+plt.plot(k,figProfit05,'m')
+plt.xlabel('Variance v')
+plt.ylabel('Total Profit')
+plt.title(r'Total Profit vs Variance at $\alpha = 0.5$')
 plt.savefig('Profit vs Variance at alpha05.pdf')
 
 # Profit vs Variance at $\alpha=0.75$
 
-plt.plot(k,figDiProfit075,'m')
-plt.title(r'Profit vs Variance at $\alpha = 0.75$')
+plt.plot(k,figProfit075,'m')
+plt.xlabel('Variance v')
+plt.ylabel('Total Profit')
+plt.title(r'Total Profit vs Variance at $\alpha = 0.75$')
 plt.savefig('Profit vs Variance at alpha075.pdf')
-
-# +
-a,b,c,x,y,z,q,beta,C1,C2,v ,alpha = symbols('a b c,x,y,z,q,beta,C1,C2,v,alpha')
-
-X=linsolve(Matrix(( [a, 1, 2, 1, 1], [2, 1, 2*b, b, 1], [1, c, 1, 2, 1], [1,2,b,2*b, 1])), (x, y, z,q))
-A=2*((1+beta*1/(C1-0.5*alpha)+v/((C1-0.5*alpha)**2)))
-B=1+beta*1/alpha+v/(alpha**2)
-C=2*((1+beta*1/(C2-0.5*alpha)+v/((C2-0.5*alpha)**2)))
-Y=X.subs([(a, A), (b, B), (c, C)])
-#variance only
-M=Y.subs([(C1, 1), (C2, 1), (alpha, 0.75),(beta,0)])
-xp=M.args[0][0]
-xs=M.args[0][2]
-pd=1-2*(xp+xs)
-l_p=xp*v/((C1-alpha/2)**2)+xp*beta/(C1-alpha/2)
-l_s=v*2*xs/(alpha**2)+beta*2*xs/alpha
-latency=xp*l_p+xs*l_s
-#latency=latency.subs([(C1,1),(v,0.5),(beta,0)])
-dilatency = diff(latency,alpha)
-pi=(xp+xs)*pd-latency
-pi_alpha=pi.subs([(C1,1),(v,0.5),(beta,0)])
-
-dipi_alpha=diff(pi_alpha,alpha)
-pi_v_alpha05=pi.subs([(C1,1),(alpha,0.5),(beta,0)])
-dipi_v_alpha05=diff(pi_v_alpha05,v)
-pi_v_alpha075=pi.subs([(C1,1),(alpha,0.75),(beta,0)])
-dipi_v_alpha075=diff(pi_v_alpha075,v)
-#print(dipi_v_alpha05)
-k = np.arange(0.01, 2.0, 0.1)
-res_exp=[];
-m=0
-
-for i in k:
-    m=m+1
-    
-    if m%10==0:
-        print(i)
-    
-    res_exp.append(dipi_v_alpha075.subs(v,i)*2)
-
-
-# -
-
-#print(res_exp)
-plt.plot(k,res_exp,'m')
-
-# +
-a,b,c,x,y,z,q,beta,C1,C2,v ,alpha = symbols('a b c,x,y,z,q,beta,C1,C2,v,alpha')
-
-X=linsolve(Matrix(( [a, 1, 2, 1, 1], [2, 1, 2*b, b, 1], [1, c, 1, 2, 1], [1,2,b,2*b, 1])), (x, y, z,q))
-A=2*((1+beta*1/(C1-0.5*alpha)+v/((C1-0.5*alpha)**2)))
-B=1+beta*1/alpha+v/(alpha**2)
-C=2*((1+beta*1/(C2-0.5*alpha)+v/((C2-0.5*alpha)**2)))
-Y=X.subs([(a, A), (b, B), (c, C)])
-#variance only
-M=Y.subs([(C1, 1), (C2, 1), (alpha, 0.75),(beta,0)])
-xp=M.args[0][0]
-xs=M.args[0][2]
-# -
-
-
