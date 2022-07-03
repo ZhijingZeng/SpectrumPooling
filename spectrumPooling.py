@@ -220,18 +220,33 @@ plt.show()
 
 # +
 class Cournot_Model:
-    def __init__(self,beta=None, alpha = None, v = None):
-        self.beta = beta
-        self.alpha = alpha
-        self.v = v
-
-    def varianceOnly(self):
-        self.beta = 0
+    def __init__(self,model =None,C1=1,C2=1,v=0.5,range=None):
+        self.model = model
+        self.C1=C1
+        self.C2=C2
+        self.range=range
+        if self.range==None:
+            self.range =  np.arange(0.01, 2.0, 0.05)
+        if self.model == 'Mean and Variance':
+            self.beta=1
+            self.v=v
+        elif self.model == 'VarianceOnly':
+            self.beta  = 0
+            self.v=v
+        elif self.model == 'MeanOnly':
+            self.beta = 1
+            self.v=0
+        else:
+            print('Your input model is not one of ''Mean and Variance'', ''VarianceOnly'', or ''MeanOnly''. We will proceed with Mean and Variance latency model')
+            self.beta=1
+            self.v=v
+    def testResults(self):
         pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta=self.generalSolve()
-        pd_varianceOnly = pd.subs([(C1, 1), (C2, 1), (v, 0.5),(beta,0)])
-        totalProfit_varianceOnly=totalProfit.subs([(C1, 1), (C2, 1), (v, 0.5),(beta,0)])
-        figProfit_varianceOnly=self.plot(totalProfit_varianceOnly,alpha)
-        return pd_varianceOnly,figProfit_varianceOnly
+        pd_test = pd.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
+        totalProfit_test=totalProfit.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
+        totalLatency_test=totalLatency.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
+        totalCS_test=totalCS.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
+        return self.plot(pd_test,alpha),self.plot(totalProfit_test,alpha),self.plot(totalLatency_test,alpha),self.plot(totalCS_test,alpha)
 
     def varianceOnlyDerivativeAlpha(self):
         pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta=self.generalSolve()
@@ -287,18 +302,33 @@ class Cournot_Model:
         return(0.5*((1-pd)**2))
     
     def plot(self,exp,Arg):
-        k=np.arange(0.01,2,0.05)
+        k=self.range
         fig=[]
         for i in k:    
             fig.append(exp.subs(Arg,i))
         return fig
 
 
+# -
 
+
+
+
+Cour=Cournot_Model(model='VarianceOnly')
+pd,profit,latency,cs=Cour.testResults()
+k=Cour.range
+plt.plot(k,pd)
+plt.show()
+plt.plot(k,profit)
+plt.show()
+plt.plot(k,latency)
+plt.show()
+plt.plot(k,cs)
+plt.show()
 
 # +
 
-Cour=Cournot_Model()
+
 figDiprofit,figDiSp1Latency=Cour.varianceOnlyDerivativeAlpha()
 figDiProfit05,figDiProfit075=Cour.varianceOnlyDerivativeV()
 k = np.arange(0.01, 2.0, 0.05)
