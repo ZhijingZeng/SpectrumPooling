@@ -20,7 +20,6 @@ from sympy import *
 
 # ## monopoly
 
-# +
 class Monopoly:
     def __init__(self,beta, v):
         self.beta=beta
