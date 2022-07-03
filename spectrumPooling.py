@@ -42,7 +42,6 @@ class Monopoly:
         return pd,latency,marketPrice,profit,surplus,x
 
 
-
 # +
 #consumer surplus is wrong.
 
@@ -94,8 +93,8 @@ plt.plot(k,pd1,'m',0,pd_a,'bo',2,pd_b,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('delivered price')
-plt.title('Delivered price')
-#plt.savefig('Delivered price setup1.pdf')
+plt.title('Mean and Variance Delivered Price')
+plt.savefig('Delivered price Mean and Variance.pdf')
 plt.show()
 
 
@@ -103,16 +102,16 @@ plt.plot(k,profit1,'m',0,profit_a,'bo',2,profit_b,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total profit')
-plt.title('total profit')
-#plt.savefig('total profit setup 1.pdf')
+plt.title('Mean and Variance Total Profit')
+#plt.savefig('total profit Mean and Variance.pdf')
 plt.show()
 
 plt.plot(k,surplus1,'m',0,surplus_a,'bo',2,surplus_b,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total consumer surplus')
-plt.title('consumer surplus')
-plt.savefig('consumer surplus setup1.pdf')
+plt.title('Mean and Variance consumer surplus')
+#plt.savefig('consumer surplus Mean and Variance.pdf')
 plt.show()
 
 # +
@@ -121,8 +120,8 @@ plt.plot(k,totalLatency1,'m',0,2*latency_a*x_a,'bo',2,latency_b*x_b,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total latency')
-plt.title('total latency')
-plt.savefig('total latency setup1.pdf')
+plt.title('total latency Mean and Variance')
+#plt.savefig('total latency Mean and Variance.pdf')
 plt.show()
 
 # +
@@ -130,7 +129,6 @@ monopoly_meanOnly=Monopoly(beta=1,v=0)
 print(monopoly_meanOnly.v)
 pd_a_meanOnly,latency_a_meanOnly,marketPrice_a_meanOnly,profit_a_meanOnly,surplus_a_meanOnly,x_a_meanOnly=monopoly_meanOnly.separateBands()
 pd_b_meanOnly,latency_b_meanOnly,marketPrice_b_meanOnly,profit_b_meanOnly,surplus_b_meanOnly,x_b_meanOnly=monopoly_meanOnly.pooledBands()
-# evenly sampled time at 200ms intervals
 k = np.arange(0.0001, 1.999, 0.0001)
 cournot_meanOnly=Cournot(k)
 pd_meanOnly,totalLatency_meanOnly,profit_meanOnly,surplus_meanOnly=cournot_meanOnly.meanOnly()
@@ -140,39 +138,36 @@ plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('delivered price')
 plt.title('Mean-Only Delivered Price')
-#plt.savefig('Delivered price setup2.pdf')
+#plt.savefig('Delivered price Mean-Only.pdf')
 plt.show()
-
-# +
+# -
 
 plt.plot(k,profit_meanOnly,'m',0,profit_a_meanOnly,'bo',2,profit_b_meanOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total profit')
 plt.title('Mean Only Total Profit')
-plt.savefig('total profit setup 2.pdf')
+#plt.savefig('total profit Mean-Only.pdf')
 plt.show()
 
 # +
-
 plt.plot(k,totalLatency_meanOnly,'m',0,2*latency_a_meanOnly*x_a_meanOnly,'bo',2,latency_b_meanOnly*x_b_meanOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total latency')
 plt.title('Mean-Only Total Latency')
-#plt.savefig('total latency setup 2.pdf')
+#plt.savefig('total latency Mean-Only.pdf')
 
 plt.show()
 
 # +
 
 plt.plot(k,surplus_meanOnly,'m',surplus_a_meanOnly,'bo',2,surplus_b_meanOnly,'ko')
-
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total consumer surplus')
-plt.title('Mean Only Consumer Surplus')
-#plt.savefig('consumer surplus setup 2.pdf')
+plt.title('Mean-Only Consumer Surplus')
+#plt.savefig('consumer surplus Mean Only.pdf')
 plt.show()
 # -
 
@@ -191,19 +186,17 @@ plt.plot(k,pd_varianceOnly,'m',0,pd_a_varianceOnly,'bo',2,pd_b_varianceOnly,'ko'
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('delivered price')
-plt.title('variance-Only Delivered Price')
-plt.savefig('Delivered price variance only.pdf')
+plt.title('Variance-Only Delivered Price')
+#plt.savefig('Delivered Price Variance Only.pdf')
 plt.show()
 # -
-
-print(x_a_varianceOnly,x_b_varianceOnly)
 
 plt.plot(k,profit_varianceOnly,'m',0,profit_a_varianceOnly,'bo',2,profit_b_varianceOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total profit')
 plt.title('Variance Only Total Profit')
-plt.savefig('total profit variance only.pdf')
+#plt.savefig('total profit variance only.pdf')
 plt.show()
 
 plt.plot(k,surplus_varianceOnly,'m',0,surplus_a_varianceOnly,'bo',2,surplus_b_varianceOnly,'ko')
@@ -211,7 +204,7 @@ plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total consumer surplus')
 plt.title('Variance Only Consumer Surplus')
-plt.savefig('consumer surplus variance only.pdf')
+#plt.savefig('consumer surplus variance only.pdf')
 plt.show()
 
 # +
@@ -221,12 +214,8 @@ plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('total latency')
 plt.title('Variance Only Total Latency')
-plt.savefig('total latency variance only.pdf')
+#plt.savefig('total latency variance only.pdf')
 plt.show()
-# -
-
-a,b,c,x,y,z,q = symbols('a b c,x,y,z,q')
-linsolve(Matrix(( [a, 1, 2, 1, 1], [2, 1, 2*b, b, 1], [1, c, 1, 2, 1], [1,2,b,2*b, 1])), (x, y, z,q))
 
 
 # +
@@ -304,12 +293,12 @@ class Cournot_Model:
             fig.append(exp.subs(Arg,i))
         return fig
 
-Cour=Cournot_Model()
-        
+
 
 
 # +
 
+Cour=Cournot_Model()
 figDiprofit,figDiSp1Latency=Cour.varianceOnlyDerivativeAlpha()
 figDiProfit05,figDiProfit075=Cour.varianceOnlyDerivativeV()
 k = np.arange(0.01, 2.0, 0.05)
