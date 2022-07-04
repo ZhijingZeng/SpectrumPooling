@@ -324,7 +324,7 @@ class Cournot_Model:
         figDiSp1Latency = self.plot(diSp1Latency,alpha)
         return figDiProfit,figDiSp1Latency
 
-    def varianceOnlyDerivativeV(self):
+    def varianceOnlyProfitV(self):
         pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,perUserLatency1,perUserLatency2,C1,C2,v,alpha,beta=self.generalSolve()
         totalProfit05 = totalProfit.subs([(C1, 1), (C2, 1), (alpha, 0.5),(beta,0)])
         totalProfit075 = totalProfit.subs([(C1, 1), (C2, 1), (alpha, 0.75),(beta,0)])
@@ -392,7 +392,7 @@ plt.show()
 '''
 
 figDiprofit,figDiSp1Latency=Cour.varianceOnlyDerivativeAlpha()
-figProfit05,figProfit075=Cour.varianceOnlyDerivativeV()
+figProfit05,figProfit075=Cour.varianceOnlyProfitV()
 
 # Derivative of Profit vs $\alpha$
 
@@ -410,7 +410,7 @@ plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('Derivative of SP 1 Latency')
 plt.title(r'Variance Only Derivative of SP 1 Latency vs $\alpha$')
 fig = plt.gcf(); fig.tight_layout()
-plt.savefig('Variance Only Derivative of SP 1 Latency vs alpha.pdf')
+#plt.savefig('Variance Only Derivative of SP 1 Latency vs alpha.pdf')
 
 # Profit vs Variance at $\alpha = 0.5$
 
@@ -418,7 +418,7 @@ plt.plot(k,figProfit05,'m')
 plt.xlabel('Variance v')
 plt.ylabel('Total Profit')
 plt.title(r'Total Profit vs Variance at $\alpha = 0.5$')
-plt.savefig('Profit vs Variance at alpha05.pdf')
+#plt.savefig('Profit vs Variance at alpha05.pdf')
 
 # Profit vs Variance at $\alpha=0.75$
 
@@ -426,4 +426,6 @@ plt.plot(k,figProfit075,'m')
 plt.xlabel('Variance v')
 plt.ylabel('Total Profit')
 plt.title(r'Total Profit vs Variance at $\alpha = 0.75$')
-plt.savefig('Profit vs Variance at alpha075.pdf')
+#plt.savefig('Profit vs Variance at alpha075.pdf')
+
+
