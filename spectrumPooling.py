@@ -55,9 +55,10 @@ class Cournot:
         l_p=x_p*(1/(1-self.t/2)+(0.5/((1-self.t/2)**2)))
         l_s=2*x_s/self.t+0.5*2*x_s/self.t**2
         totalLatency=2*(x_p*l_p+x_s*l_s) #latency for 2 SP
+        averagePerUserLatency = totalLatency/(2*(x_p+x_s))
         profit=2*((x_p+x_s)*pd)-totalLatency #multiply with 2
         surplus=0.5*((1-pd)**2)
-        return pd,totalLatency,profit,surplus
+        return pd,totalLatency,profit,surplus,averagePerUserLatency
     def meanOnly(self):
         x_p=(2-self.t)/(self.t+10)
         x_s=((3*self.t-10)*x_p+2-self.t)/(6-3*self.t)
@@ -65,9 +66,10 @@ class Cournot:
         l_p=x_p*1/(1-self.t/2)
         l_s=2*x_s/self.t
         totalLatency=2*(x_p*l_p+x_s*l_s)
+        averagePerUserLatency = totalLatency/(2*(x_p+x_s))
         profit=2*(x_p+x_s)*pd-totalLatency
         surplus=0.5*((1-pd)**2)
-        return pd,totalLatency,profit,surplus
+        return pd,totalLatency,profit,surplus,averagePerUserLatency
     def varianceOnly(self):
         x_p=(4+self.t**2-4*self.t)/(11*self.t**2-12*self.t+16)
         x_s=(self.t**2-3*(self.t**2)*x_p)/(3*self.t**2+1.5)
@@ -75,9 +77,10 @@ class Cournot:
         l_p=x_p*0.5/((1-self.t/2)**2)
         l_s=0.5*2*x_s/(self.t**2)
         totalLatency=2*(x_p*l_p+x_s*l_s)
+        averagePerUserLatency = totalLatency/(2*(x_p+x_s))
         profit=2*(x_p+x_s)*pd-totalLatency
         surplus=0.5*((1-pd)**2)
-        return pd,totalLatency,profit,surplus
+        return pd,totalLatency,profit,surplus,averagePerUserLatency
 
 
 
@@ -88,15 +91,15 @@ class Cournot:
 monopoly=Monopoly(1,0.5)
 pd_a,latency_a,marketPrice_a,profit_a,surplus_a,x_a=monopoly.separateBands()
 pd_b,latency_b,marketPrice_b,profit_b,surplus_b,x_b=monopoly.pooledBands()
-k = np.arange(0.001, 1.999, 0.01)
+k = np.arange(0.001, 1.999, 0.001)
 cournot_1=Cournot(k)
-pd1,totalLatency1,profit1,surplus1=cournot_1.setup1()
+pd1,totalLatency1,profit1,surplus1,averagePerUserLatency1=cournot_1.setup1()
 plt.plot(k,pd1,'m',0,pd_a,'bo',2,pd_b,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('delivered price')
 plt.title('Mean and Variance Delivered Price')
-plt.savefig('Delivered price Mean and Variance.pdf')
+#plt.savefig('Delivered price Mean and Variance.pdf')
 plt.show()
 
 
@@ -125,6 +128,16 @@ plt.ylabel('total latency')
 plt.title('total latency Mean and Variance')
 #plt.savefig('total latency Mean and Variance.pdf')
 plt.show()
+
+# +
+plt.plot(k,averagePerUserLatency1,'m',0,latency_a,'bo',2,latency_b,'ko')
+
+plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('average per user latency')
+plt.title('Mean and Variance Avarage per user latency')
+plt.savefig('Avarage per user latency Mean and Variance.pdf')
+plt.show()
 # -
 
 # Mean-Only Latency Model
@@ -136,7 +149,7 @@ pd_a_meanOnly,latency_a_meanOnly,marketPrice_a_meanOnly,profit_a_meanOnly,surplu
 pd_b_meanOnly,latency_b_meanOnly,marketPrice_b_meanOnly,profit_b_meanOnly,surplus_b_meanOnly,x_b_meanOnly=monopoly_meanOnly.pooledBands()
 k = np.arange(0.0001, 1.999, 0.0001)
 cournot_meanOnly=Cournot(k)
-pd_meanOnly,totalLatency_meanOnly,profit_meanOnly,surplus_meanOnly=cournot_meanOnly.meanOnly()
+pd_meanOnly,totalLatency_meanOnly,profit_meanOnly,surplus_meanOnly,averagePerUserLatency_meanOnly=cournot_meanOnly.meanOnly()
 plt.plot(k,pd_meanOnly,'m',0,pd_a_meanOnly,'bo',2,pd_b_meanOnly,'ko')
 
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
@@ -166,6 +179,16 @@ plt.title('Mean-Only Total Latency')
 plt.show()
 
 # +
+plt.plot(k,averagePerUserLatency_meanOnly,'m',0,latency_a_meanOnly,'bo',2,latency_b_meanOnly,'ko')
+
+plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('average per user latency')
+plt.title('Mean-Only Avarage per user latency')
+plt.savefig('Avarage per user latency Mean-Only.pdf')
+plt.show()
+
+# +
 
 plt.plot(k,surplus_meanOnly,'m',surplus_a_meanOnly,'bo',2,surplus_b_meanOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
@@ -184,7 +207,7 @@ pd_a_varianceOnly,latency_a_varianceOnly,marketPrice_a_varianceOnly,profit_a_var
 pd_b_varianceOnly,latency_b_varianceOnly,marketPrice_b_varianceOnly,profit_b_varianceOnly,surplus_b_varianceOnly,x_b_varianceOnly=monopoly_varianceOnly.pooledBands()
 k = np.arange(0.0001, 2, 0.0001)
 cournot_varianceOnly=Cournot(k)
-pd_varianceOnly,totalLatency_varianceOnly,profit_varianceOnly,surplus_varianceOnly=cournot_varianceOnly.varianceOnly()
+pd_varianceOnly,totalLatency_varianceOnly,profit_varianceOnly,surplus_varianceOnly,averagePerUserLatency_varianceOnly=cournot_varianceOnly.varianceOnly()
 plt.plot(k,pd_varianceOnly,'m',0,pd_a_varianceOnly,'bo',2,pd_b_varianceOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
@@ -192,8 +215,6 @@ plt.ylabel('delivered price')
 plt.title('Variance-Only Delivered Price')
 #plt.savefig('Delivered Price Variance Only.pdf')
 plt.show()
-
-
 
 plt.plot(k,profit_varianceOnly,'m',0,profit_a_varianceOnly,'bo',2,profit_b_varianceOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
@@ -221,6 +242,15 @@ plt.title('Variance Only Total Latency')
 #plt.savefig('total latency variance only.pdf')
 plt.show()
 
+# +
+
+plt.plot(k,averagePerUserLatency_varianceOnly,'m',0,latency_a_varianceOnly,'bo',2,latency_b_varianceOnly,'ko')
+plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('Average Per User Latency')
+plt.title('Variance-Only Average Per User Latency')
+plt.savefig('Average per user latency variance only.pdf')
+plt.show()
 
 # -
 
