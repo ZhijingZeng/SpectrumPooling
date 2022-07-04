@@ -83,6 +83,8 @@ class Cournot:
 
 # -
 
+# Mean and Variance Latency model
+
 monopoly=Monopoly(1,0.5)
 pd_a,latency_a,marketPrice_a,profit_a,surplus_a,x_a=monopoly.separateBands()
 pd_b,latency_b,marketPrice_b,profit_b,surplus_b,x_b=monopoly.pooledBands()
@@ -123,10 +125,13 @@ plt.ylabel('total latency')
 plt.title('total latency Mean and Variance')
 #plt.savefig('total latency Mean and Variance.pdf')
 plt.show()
+# -
+
+# Mean-Only Latency Model
 
 # +
 monopoly_meanOnly=Monopoly(beta=1,v=0)
-print(monopoly_meanOnly.v)
+#print(monopoly_meanOnly.v)
 pd_a_meanOnly,latency_a_meanOnly,marketPrice_a_meanOnly,profit_a_meanOnly,surplus_a_meanOnly,x_a_meanOnly=monopoly_meanOnly.separateBands()
 pd_b_meanOnly,latency_b_meanOnly,marketPrice_b_meanOnly,profit_b_meanOnly,surplus_b_meanOnly,x_b_meanOnly=monopoly_meanOnly.pooledBands()
 k = np.arange(0.0001, 1.999, 0.0001)
@@ -173,23 +178,22 @@ plt.show()
 
 # Variance Only
 
-# +
 monopoly_varianceOnly=Monopoly(beta=0,v=0.5)
-print(monopoly_varianceOnly.v)
+#print(monopoly_varianceOnly.v)
 pd_a_varianceOnly,latency_a_varianceOnly,marketPrice_a_varianceOnly,profit_a_varianceOnly,surplus_a_varianceOnly,x_a_varianceOnly=monopoly_varianceOnly.separateBands()
 pd_b_varianceOnly,latency_b_varianceOnly,marketPrice_b_varianceOnly,profit_b_varianceOnly,surplus_b_varianceOnly,x_b_varianceOnly=monopoly_varianceOnly.pooledBands()
 k = np.arange(0.0001, 2, 0.0001)
 cournot_varianceOnly=Cournot(k)
 pd_varianceOnly,totalLatency_varianceOnly,profit_varianceOnly,surplus_varianceOnly=cournot_varianceOnly.varianceOnly()
 plt.plot(k,pd_varianceOnly,'m',0,pd_a_varianceOnly,'bo',2,pd_b_varianceOnly,'ko')
-
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('delivered price')
 plt.title('Variance-Only Delivered Price')
 #plt.savefig('Delivered Price Variance Only.pdf')
 plt.show()
-# -
+
+
 
 plt.plot(k,profit_varianceOnly,'m',0,profit_a_varianceOnly,'bo',2,profit_b_varianceOnly,'ko')
 plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
