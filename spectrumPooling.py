@@ -305,15 +305,17 @@ class Cournot_Model:
             self.beta=1
             self.v=v
     def testResults(self):
-        pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta=self.generalSolve()
+        pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,perUserLatency1,perUserLatency2,C1,C2,v,alpha,beta=self.generalSolve()
         pd_test = pd.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
         totalProfit_test=totalProfit.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
         totalLatency_test=totalLatency.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
         totalCS_test=totalCS.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
-        return self.plot(pd_test,alpha),self.plot(totalProfit_test,alpha),self.plot(totalLatency_test,alpha),self.plot(totalCS_test,alpha)
+        perUserLatency_test1=perUserLatency1.subs([(C1, self.C1), (C2, self.C2), (v, self.v),(beta,self.beta)])
+        postedPrice_test1=pd_test-perUserLatency_test1
+        return self.plot(pd_test,alpha),self.plot(totalProfit_test,alpha),self.plot(totalLatency_test,alpha),self.plot(totalCS_test,alpha),self.plot(perUserLatency_test1,alpha),self.plot(postedPrice_test1,alpha)
 
     def varianceOnlyDerivativeAlpha(self):
-        pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta=self.generalSolve()
+        pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,perUserLatency1,perUserLatency2,C1,C2,v,alpha,beta=self.generalSolve()
         totalProfit = totalProfit.subs([(C1, 1), (C2, 1), (v, 0.5),(beta,0)])
         latency1= latency1.subs([(C1, 1), (C2, 1), (v, 0.5),(beta,0)])
         diProfit=diff(totalProfit,alpha)
@@ -323,7 +325,7 @@ class Cournot_Model:
         return figDiProfit,figDiSp1Latency
 
     def varianceOnlyDerivativeV(self):
-        pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta=self.generalSolve()
+        pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,perUserLatency1,perUserLatency2,C1,C2,v,alpha,beta=self.generalSolve()
         totalProfit05 = totalProfit.subs([(C1, 1), (C2, 1), (alpha, 0.5),(beta,0)])
         totalProfit075 = totalProfit.subs([(C1, 1), (C2, 1), (alpha, 0.75),(beta,0)])
         return self.plot(totalProfit05,v),self.plot(totalProfit075,v)
@@ -347,7 +349,9 @@ class Cournot_Model:
         p2=self.oneSpProfit(pd,xp2,xs2,latency2)
         totalProfit=p1+p2
         totalCS=self.totalConsumerSurplus(pd)
-        return pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,C1,C2,v,alpha,beta
+        perUserLatency1=latency1/(xp1+xs1)
+        perUserLatency2=latency2/(xp2+xs2)
+        return pd,latency1,latency2,totalLatency,p1,p2,totalProfit,totalCS,perUserLatency1,perUserLatency2,C1,C2,v,alpha,beta
 
     def deliverPrice(self,xp1,xp2,xs1,xs2):
         return (1-(xp1+xp2+xs1+xs2))
@@ -369,8 +373,8 @@ class Cournot_Model:
         for i in k:    
             fig.append(exp.subs(Arg,i))
         return fig
-Cour=Cournot_Model(model='VarianceOnly')
-pd,profit,latency,cs=Cour.testResults()
+Cour=Cournot_Model(model='MeanandV')
+pd,profit,latency,cs,perUserLa1,postedPrice1=Cour.testResults()
 k=Cour.range
 '''
 plt.plot(k,pd)
@@ -380,6 +384,10 @@ plt.show()
 plt.plot(k,latency)
 plt.show()
 plt.plot(k,cs)
+plt.show()
+plt.plot(k,perUserLa1)
+plt.show()
+plt.plot(k,postedPrice1)
 plt.show()
 '''
 
