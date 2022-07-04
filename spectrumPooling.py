@@ -136,7 +136,17 @@ plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('average per user latency')
 plt.title('Mean and Variance Avarage per user latency')
-plt.savefig('Avarage per user latency Mean and Variance.pdf')
+#plt.savefig('Avarage per user latency Mean and Variance.pdf')
+plt.show()
+
+# +
+plt.plot(k,pd1-averagePerUserLatency1,'m',0,pd_a-latency_a,'bo',2,pd_b-latency_b,'ko')
+
+plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('Posted Price')
+plt.title('Mean and Variance Posted Price')
+plt.savefig('Posted Price Mean and Variance.pdf')
 plt.show()
 # -
 
@@ -185,7 +195,17 @@ plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist
 plt.xlabel('alpha (capacity on the shared band) ')
 plt.ylabel('average per user latency')
 plt.title('Mean-Only Avarage per user latency')
-plt.savefig('Avarage per user latency Mean-Only.pdf')
+#plt.savefig('Avarage per user latency Mean-Only.pdf')
+plt.show()
+
+# +
+plt.plot(k,pd_meanOnly-averagePerUserLatency_meanOnly,'m',0,pd_a_meanOnly-latency_a_meanOnly,'bo',2,pd_b_meanOnly-latency_b_meanOnly,'ko')
+
+plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('posted price')
+plt.title('Mean-Only Posted Price')
+plt.savefig('Posted Price Mean-Only.pdf')
 plt.show()
 
 # +
@@ -253,6 +273,15 @@ plt.savefig('Average per user latency variance only.pdf')
 plt.show()
 
 # -
+
+plt.plot(k,pd_varianceOnly-averagePerUserLatency_varianceOnly,'m',0,pd_a_varianceOnly-latency_a_varianceOnly,'bo',2,pd_b_varianceOnly-latency_b_varianceOnly,'ko')
+plt.legend(['cournot model', 'monoplist keeps the two bands separate','monoplist pools the two bands together'])
+plt.xlabel('alpha (capacity on the shared band) ')
+plt.ylabel('Posted Price')
+plt.title('Variance-Only Posted Price')
+plt.savefig('Posted Price variance only.pdf')
+plt.show()
+
 
 class Cournot_Model:
     def __init__(self,model =None,C1=1,C2=1,v=0.5,range=None):
